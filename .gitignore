@@ -1,3 +1,5 @@
 # Project files
 .idea/
 
+# PlatformIO project files TODO: determine if these should be committed
+.pio/
