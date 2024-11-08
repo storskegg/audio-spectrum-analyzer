@@ -1,57 +1,53 @@
 #include <Arduino.h>
 #include <stdlib.h>
+#include "mbed_config.h"
+
+#if !MBED_CONF_RTOS_PRESENT
+#error NO MBED BOO
+#endif
 
 struct boundaries_t {
   double f_min;
   double f_max;
 };
 
+boundaries_t b = {20, 4000};
+size_t num_bins = 1001;
 
-boundaries_t b = {40, 4000};
-size_t num_bins = 21;
-
-char* s;
+char* s = (char*) malloc(sizeof(char) * 256);
 
 unsigned long start;
 unsigned long end;
+unsigned long iter = 0;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(2000000);
 
   while (!Serial) {
     delay(10);
   }
-
-  start = millis();
-
-  double* ffs = generate_bins(&b, 2, num_bins);
-  // if (ffs == NULL) {
-  //   Serial.println("ERR: could not create bins");
-  //   while (true) {
-  //     delay(10);
-  //   }
-  // }
-
-  end = millis();
-
-  char* s = (char*) malloc(sizeof(char) * 256);
-  sprintf(s, "It took %ld millis to calculate logarithmic Fourier frequencies for %d bins.", end - start, int(num_bins));
-  Serial.println(s);
-
-  for (size_t i = 0; i < num_bins; i++) {
-    sprintf(s, "[%2d] %8.2f", int(i), ffs[i]);
-    Serial.println(s);
-  }
-
-  free(ffs);
-  free(s);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  iter++;
 
+  start = micros();
+
+  double* ffs = generate_bins(&b, 1, num_bins);
+  end = micros();
+
+  for (int i = 0; i < int(num_bins); i++) {
+    sprintf(s, "[%6d] %.1f", i+1, ffs[i]);
+    Serial.println(s);
+  }
+
+  sprintf(s, "[%6ld] It took %ld micros to calculate logarithmic Fourier frequencies for %d bins.", iter, end - start, int(num_bins));
+  Serial.println(s);
+
+  free(ffs);
+
+  delay(60000); // min
 }
-
 
 double g(boundaries_t* b) {
   return log(b->f_max) - log(b->f_min);
@@ -83,4 +79,3 @@ double* generate_bins(boundaries_t* b, int precision, size_t num_bins) {
 
   return v;
 }
-

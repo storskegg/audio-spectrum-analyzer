@@ -18,21 +18,27 @@ work on.
 - **Impedance** - For the purposes of this device, it is expected that the DUT will be externally loaded (i.e. 50, 
   600, 1500, 15000, 1M ohm loads). As such, the acquisition input impedance should be as high as possible while 
   maintaining the lowest acceptable noise floor (think oscilloscope probes).
-- **Attenuation** - The device should handle signals up to 10 Vrms. That is likely far stronger than the ADC's 
-  maximum ratings (e.g. Vref of 3.3V). Because of this, there should be a stepped attenuator for signal range 
+- **Attenuation** - The device should handle signals up to `10 Vrms`. That is likely far stronger than the ADC's 
+  maximum ratings (e.g. `Vref` of 3.3V). Because of this, there should be a stepped attenuator for signal range 
   selection, and some sort of crowbar circuit protection (e.g. diodes). Additionally, it should be noted that if the 
   signal is being divided, then the resulting error is the ADC's LSB multiplied by the voltage divider's quotient. 
-  Explicitly, a 2:1 divider results in an error of `LSB * 2`, a 10:1 divider results in an error of `LSB * 10`.
-- **Gain** - Related, if we're working with a smaller signal, but don't want to lose the resolution we have on a 
+  Explicitly, a `2:1` divider results in an error of `LSB * 2`, a `10:1` divider results in an error of `LSB * 10`.
+- **Gain** - Related, if we're working with a smaller signal, but don't want to lose the detail we have on a 
   "full-swing" signal, then we could add a PGA to bring the weak signal up to something that gives us more detail, 
   and knowing the gain we've added, we can adjust for it later in the processing and display.
 
 ### Feature: _Data Processing & Reporting_
 
+- **FFT Bins** - Configurable with sane min and max values. 
 - **RMS Samples** - This should be configurable, with a maximum to be determined after observing just how fast the 
   ADC will sample (probably dependent on how bad my code is `;-P`)
-- **Sweep Modes** - Single sweep, continuous mode, etc
+- **Sweep Modes** - Single sweep, continuous mode (sample and hold, sample and average), etc
 - **Display**
+  - **Units**: Vrms, Vpp, dBV, dBu; FFT units shown left of graph, gain units shown right of graph
+  - **Graph Layers**
+    - **Raw FFT**: FFT in units above
+    - **Gain Curve**: Gain curve (dB)
+  - **DDS**: Marker/Sweep controls are always displayed on screen where ever it makes most sense
 - **Exportable: CSV File**
 - **Exportable: UDP Broadcast**
 
@@ -46,7 +52,7 @@ work on.
       has strong graphics capabilities, support for the display shield, an onboard, 16-bit ADC that isn't complete 
       trash, and that is already wired up to the  microphone ring of the onboard 1/8" audio TRRS jack. (I can add 
       better DAQ later.) 
-- Arduino GIGA Display
+- Arduino GIGA Display (800 x 480 + Touch)
     - **What:** It's all in the name
     - **Why:** High (enough) resolution display with touch support, and ready-made for the host controller (complete 
       with graphics acceleration, etc) 
@@ -69,10 +75,19 @@ typically found on MCU's. Using the onboard ADC also simplifies the start of thi
   datasheet was mostly talking the MHz realm, which is solidly out of spec for this device. Regardless, the `Vref` 
   voltage must be very stable and accurate. Probably overkill, but I've thought about running an LM399 through a 
   voltage divider to half it, and then buffer the output with an ultra-low noise opamp that can handle the transients.
-- `LSB = Vref / (2^bits)` where bits is the ADC resolution. The internal ADC is 16-bits, resulting in `~50uV`.
+- `LSB = Vref / (2^bits)` where bits is the ADC resolution. The internal ADC is 16-bits, resulting in `~50uV` at a 
+  `Vref = 3.3V`.
 - While I'm using the onboard ADC, it'll be run single-ended. When I move to an external ADC, I'll consider a 
   differential ADC in conjunction with an instrumentation amp, or similar DAQ module to handle common mode noise 
   rejection, etc.
+
+## Software Decisions
+
+- Library Options
+  - **Arduino GFX** - Probably where I'll start, but...
+  - **LVGL** - Probably where I'll end up.
+
+---
 
 ## References
 
@@ -80,6 +95,8 @@ typically found on MCU's. Using the onboard ADC also simplifies the start of thi
 
 - STM32H747: https://www.st.com/resource/en/datasheet/stm32h747bi.pdf
 - AD9833: https://www.mouser.com/datasheet/2/609/ad9833-3119795.pdf
+- Arduino GIGA R1: https://docs.arduino.cc/tutorials/giga-r1-wifi/cheat-sheet/
+- Arduino GIGA Display Shield: https://docs.arduino.cc/tutorials/giga-display-shield/getting-started/
 
 ### Application Notes
 
