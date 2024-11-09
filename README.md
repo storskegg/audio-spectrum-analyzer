@@ -116,5 +116,6 @@ typically found on MCU's. Using the onboard ADC also simplifies the start of thi
 
 ### Academic Papers, Journal Articles, etc
 
-- [Improved spectrum estimation from digitized time series on a logarithmic frequency axis](https://hdl.handle.net/11858/00-001M-0000-0013-4BFD-C)
-- [Negative time-constant and PWM program a versatile ADC front end](https://www.edn.com/negative-time-constant-and-pwm-program-a-versatile-adc-front-end/)
+1. [Improved spectrum estimation from digitized time series on a logarithmic frequency axis](https://hdl.handle.net/11858/00-001M-0000-0013-4BFD-C)
+2. [Negative time-constant and PWM program a versatile ADC front end](https://www.edn.com/negative-time-constant-and-pwm-program-a-versatile-adc-front-end/)
+
