@@ -7,14 +7,21 @@ struct boundaries_t {
   double f_max;
 };
 
-boundaries_t b = {20, 4000};
-size_t num_bins = 1001;
+boundaries_t b = {10, 100000};
+size_t num_bins = 4001;
+size_t max_bins = 4001;
+double* fourier_bin_frequencies = NULL;
 
 char* s = (char*) malloc(sizeof(char) * 256);
 
 unsigned long start;
 unsigned long end;
 unsigned long iter = 0;
+
+double* generate_bins(const boundaries_t* b, int precision, size_t num_bins);
+double to_precision(double n, int places);
+double bin_frequency(int idx, const boundaries_t* b, int num_bins);
+double g(const boundaries_t* b);
 
 void setup() {
   Serial.begin(2000000);
@@ -29,7 +36,7 @@ void loop() {
 
   start = micros();
 
-  double* fourier_bin_frequencies = generate_bins(&b, 1, num_bins);
+  fourier_bin_frequencies = generate_bins(&b, 1, num_bins);
   end = micros();
 
   for (int i = 0; i < int(num_bins); i++) {
@@ -67,7 +74,7 @@ double* generate_bins(const boundaries_t* b, int precision, size_t num_bins) {
     return NULL;
   }
 
-  double* v = static_cast<double*>( malloc(num_bins * sizeof(double)) );
+  double* v = new double[num_bins];
 
   for (size_t i = 0; i < num_bins; i++) {
     v[i] = to_precision(bin_frequency(i, b, num_bins), precision);
