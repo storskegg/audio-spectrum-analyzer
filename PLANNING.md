@@ -66,3 +66,82 @@ The UI should never be blocked. Use IRQ for touch response.
 2. Add numerical entry (dialog, kinda like the oscilloscope?), and switch to doubles. The AD9833 clocked at 25MHz 
    supports a resolution of 0.1 Hz, so that's all the precision we need. Also...that's really all I need for audio 
    purposes, anyways. (Why doubles, when? I prefer to minimize type casting whenever possible.)
+
+## 5. ADC function - Basic
+
+The goal of this step is to familiarize myself with ADC accessors, perform basic RMS readings from an external 
+signal generator (on my oscilloscope), and generally get comfortable performing reads without blocking code 
+execution, and just dumping values to Serial, verifying against my lab tooling.
+
+## 6. UI Development II - Add ADC Control and Feedback
+
+As with the DDS function, I'll need to move control and feedback to the UI from Serial. Start/Stop reads, display 
+the read value, control RMS buckets, etc. It would be good to use the DDS function hooked up to the ADC loopback 
+style so that we can adjust the frequency of the sine wave, and verify that the Vrms reads remain consistent, as 
+well as supporting the continued effort of non-blocking everywhere possible.
+
+## 7. ADC function - Advanced
+
+This may get split into multiple sub-steps, as you'll read about below.
+
+FFT time. We'll start with only a handful of bins...something easily spewable from the Serial line in ascii, or 
+maybe CSV dump...doesn't really matter. Still, just a handful of bins, limited frequency range, test initially with 
+the waveform generator on the oscilloscope, looking for harmonics--20 Hz is probably a good place to start, and keep 
+and eye on 2nd, 3rd, 4th, and 5th order harmonics. Afterwards, use the DDS to supply the marker, also at 20 Hz, and 
+compare the results to what's observable on the oscilloscope's FFT function. Ballpark correctness is all we need 
+here at this time...just a sanity check.
+
+Ugh...and decide on a windowing function, or choose to support a handful of them (e.g. hamming, hanning, etc).
+
+Additionally, now is the time to support FFTs on sweep in addition to marker generation. A decision needs to be made 
+whether to retain FFT data for each point in the sweep, or sum them as we go along, averaging in the end to produce 
+a final verdict. Both might be good for different reasons...
+
+- individual FFT retention is good for looking at the voltage spectrum for a given fundamental + harmonics...
+  something i'm expressly interested in, since the DUT on my bench this moment is a valve device being operated 
+  outside its linear-most bias regions, producing those nice even-order harmonics. additionally, this allows me to 
+  better report on the gain of the DUT at each frequency (both in terms of fundamental, and %THD re: the harmonics)
+- "lump average" after the sweep gives me spectrum power density, which is also useful for things like 
+  characterizing an instrument (e.g. harmonica X through microphone Y), which allows me to better tune high/low pass 
+  filters and tone stacks (essentially complicated pi-filters) on amplifiers, etc to give the best/desired compression, 
+  tone, etc.
+
+## 8. UI Development III - Add a Little FFT Display
+
+Like most of these steps, there's some spike work to be done, here. This is where I incorporate an FFT display into 
+the UI. Probably better to find than to write, so I'll be doing my research. At the same time, if I find multiple 
+projects that I like, but they each have some features that I want that others lack, then I may wind up rolling my 
+own. I don't want good enough, feature-wise. On that note, features...
+
+On so many FFT displays, you get the rolling waterfall display, and I would definitely call that nice-to-have. It's 
+not essential, but would be neat to see the spikes move across during a sweep. At the same time, if all goes well, 
+the sweeps will be fast enough that it's not really work showing on a waterfall. Also, it's not the largest display, 
+so UI real estate is valuable, and a waterfall would be the first thing to get cut in order to better display a 
+layered line graph with axis labels and units, etc etc etc, not to mention the controls for the marker/sweep 
+generator, etc.
+
+I'll also want to switch between visibility modes: Voltage spectrum of fundamentals and spectrum power density being 
+the two big ones. It should be easy to switch between modes.
+
+There will likely be more noodling on this as time goes by.
+
+## 9. UI Development IV - Functional, Practical UI Design
+
+Up until this point, everything UI-related will have been super crufty, "good enough" for now design; and not 
+practical for a finished product. So, I'm not aiming for distributable UI quality--it just has to work on my bench, 
+so good enough for me, but that still means it needs to be practical. This is where I sit down, and design a 
+polished UI, informed by my experiences with all of the prior UI steps.
+
+800x480, and about...4in? ish? It's little. Fine for now.
+
+## 10. UI Development V - Functional, Practical UI Implementation
+
+Now that it's designed, get it into code.
+
+## 11. Extended Features Consideration
+
+There are a lot of feature ideas I've had just in the course of writing this document, let along the ones I thought 
+of prior. These all fall into the categories of necessary complexities (to be solved after the core of it all has 
+been done), nice-to-haves, etc.
+
+What I need to do is start documenting them...here, I guess. Kind of a "tech radar" thing.
