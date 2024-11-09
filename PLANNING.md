@@ -52,7 +52,7 @@ thinking of it...I _think_ there's an audio amp associated with the TRRS...I'll 
 Additionally, I'll need to verify the output voltage on ye olde 34401A at various frequencies through the desired 
 range, and test them unloaded, as well as loaded at some common, sane values (1M, 150k, 50k, 1k, and 600R).
 
-I'll choose at this time whether or not I need to add some programmable gain right off, or maybe just add unity gain 
+I'll choose at this time whether I need to add some programmable gain right off, or maybe just add unity gain 
 current buffering in the form of a JFET source follower, or with something like a TL072.
 
 ## 4. UI Development I - DDS Control
@@ -60,4 +60,9 @@ current buffering in the form of a JFET source follower, or with something like 
 I have a few options re: library packages, and will have to play with each of them to figure out what I like and 
 dislike about each of them. This is a great time to make a simple UI to control the DDS functions!
 
+The UI should never be blocked. Use IRQ for touch response.
 
+1. Start with integer value frequencies, and simple up/down arrows, with an updating display of current setting.
+2. Add numerical entry (dialog, kinda like the oscilloscope?), and switch to doubles. The AD9833 clocked at 25MHz 
+   supports a resolution of 0.1 Hz, so that's all the precision we need. Also...that's really all I need for audio 
+   purposes, anyways. (Why doubles, when? I prefer to minimize type casting whenever possible.)
