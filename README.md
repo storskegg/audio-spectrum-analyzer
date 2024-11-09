@@ -114,3 +114,6 @@ typically found on MCU's. Using the onboard ADC also simplifies the start of thi
 
 - STM32H747 16-bit ADC: https://www.st.com/resource/en/application_note/dm00628458-getting-started-with-the-stm32h7-series-mcu-16bit-adc-stmicroelectronics.pdf
 
+### Academic Papers, etc
+
+- [Improved spectrum estimation from digitized time series on a logarithmic frequency axis](https://hdl.handle.net/11858/00-001M-0000-0013-4BFD-C)
