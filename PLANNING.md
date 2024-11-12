@@ -2,7 +2,7 @@
 
 ## Milestones
 
-1. Fix the tooling
+1. [x] Fix the tooling
 2. Get to know the board a bit
 3. DDS function
 4. UI Development I - DDS Control
@@ -24,6 +24,8 @@ borks when it tries to upload an image to the controller. Issue searched on PIO'
 issue opened on PIO's github.
 
 I'll have to get one of these working tomorrow. In the meantime, documentation documentation documentation...
+
+**UPDATE:** 2024-11-11 Applied locally the [solution found in this commit](https://github.com/platformio/platform-ststm32/commit/62a48b6c8cd1a4a9fa79a808c7a6cdfbf728cd84)
 
 ## 2. Get to know the board a bit
 
