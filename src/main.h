@@ -10,6 +10,8 @@
  */
 #include <Arduino.h>
 #include <Arduino_GigaDisplay.h>
+#include <Arduino_GigaDisplay_GFX.h>
+#include <Arduino_GigaDisplayTouch.h>
 #include <Arduino_AdvancedAnalog.h>
 #include <SPI.h>
 
@@ -19,14 +21,43 @@
 #include "dds.h"
 
 /*******************************************************
- * RGB LED on Giga Display
+ * Generic Settings
+ */
+unsigned long serial_wait_time = 4000;
+
+/*******************************************************
+ * Giga Display Shield Items
  */
 GigaDisplayRGB rgb;
+Arduino_GigaDisplayTouch touch;
+GigaDisplay_GFX display;
+
+#define WHITE 0xffff
+#define BLACK 0x0000
+
+#define screen_size_y 480
+#define screen_size_x 800
+
+int touch_x;
+int touch_y;
+
+unsigned long touch_last;
+unsigned long touch_threshold = 750; // millis
+
+bool switch_1;
+
+void touch_toggle(uint8_t contacts, GDTpoint_t* points);
+void set_screen_on();
+void set_screen_off();
+
 
 /*******************************************************
  * Binning related shit
  */
-boundaries_t b = {10, 440};
+boundaries_t b = {
+  .f_min =  10,
+  .f_max =  440
+};
 const size_t num_bins = 21;
 //size_t max_bins = 4001;
 double* fourier_bin_frequencies = nullptr;
