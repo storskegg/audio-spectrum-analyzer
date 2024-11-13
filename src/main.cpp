@@ -9,16 +9,34 @@ void setup() {
   Serial.begin(2000000);
 
   while (!Serial) {
-    delay(250);
-    rgb.on(255, 0, 0);
-    delay(250);
+    delay(100);
+    rgb.on(0, 255, 0);
+    delay(100);
     rgb.off();
+
+    unsigned long now = millis();
+    if (now > serial_wait_time && now - serial_wait_time > 0) {
+      goto AFTER_SER_WAIT;
+    }
   }
+AFTER_SER_WAIT:
 
   rgb.on(100, 50, 0);
 
   Serial.print("MBED_VERSION=");
   Serial.println(MBED_VERSION);
+
+  display.begin();
+  display.setRotation(1);
+
+  if (touch.begin()) {
+    Serial.print("Touch controller init - OK");
+  } else {
+    Serial.print("Touch controller init - FAILED");
+    while (true);
+  }
+
+  set_screen_off();
 
   // Resolution, sample rate, number of samples per channel, queue depth.
   if (!adc.begin(AN_RESOLUTION_16, 320000, 32, 128)) {
@@ -45,6 +63,7 @@ void setup() {
   dds_set_frequency(dds_freq);
   dds_off();
 
+  touch.onDetect(touch_toggle);
   rgb.on(0, 25, 0);
 }
 
@@ -95,4 +114,46 @@ void loop() {
   free(fourier_bin_frequencies);
 //  rgb.off();
 //  delay(5);
+}
+
+void touch_toggle(uint8_t contacts, GDTpoint_t* points) {
+  if (contacts > 0 && (millis() - touch_last > touch_threshold)) {
+    Serial.print("Contacts: ");
+    Serial.println(contacts);
+
+    /* First touch point */
+    Serial.print(points[0].x);
+    Serial.print(" ");
+    Serial.println(points[0].y);
+
+    if (touch_x < screen_size_x && touch_y < screen_size_y) {
+      switch_1 = !switch_1;
+      Serial.println("switched");
+
+      if (switch_1) {
+        set_screen_on();
+        dds_on();
+      } else {
+        set_screen_off();
+        dds_off();
+      }
+    }
+    touch_last = millis();
+  }
+}
+
+void set_screen_on() {
+  display.fillScreen(WHITE);
+  display.setTextColor(BLACK);
+  display.setCursor(screen_size_x/2, screen_size_y/2);
+  display.setTextSize(5);
+  display.print("ON");
+}
+
+void set_screen_off() {
+  display.fillScreen(BLACK);
+  display.setTextColor(WHITE);
+  display.setCursor(screen_size_x/2, screen_size_y/2);
+  display.setTextSize(5);
+  display.print("OFF");
 }
