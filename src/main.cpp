@@ -1,5 +1,8 @@
 #include <Arduino.h>
 #include <cstdlib>
+#include <Arduino_AdvancedAnalog.h>
+#include "../.pio/libdeps/giga_r1_m7/Arduino_AdvancedAnalog/src/AdvancedAnalog.h"
+#include "../.pio/libdeps/giga_r1_m7/Arduino_AdvancedAnalog/src/AdvancedADC.h"
 //#include "mbed_config.h"
 
 struct boundaries_t {
@@ -14,9 +17,12 @@ double* fourier_bin_frequencies = nullptr;
 
 char* s = (char*) malloc(sizeof(char) * 256);
 
-unsigned long start;
-unsigned long end;
+double bit_resolution = 3.3/65536;
 unsigned long iter = 0;
+unsigned long start = 0;
+unsigned long end = 0;
+
+AdvancedADC adc(A7);
 
 double* generate_bins(const boundaries_t* bt, int precision, size_t n);
 double to_precision(double n, int places);
@@ -29,27 +35,39 @@ void setup() {
   while (!Serial) {
     delay(10);
   }
+
+  // Resolution, sample rate, number of samples per channel, queue depth.
+  if (!adc.begin(AN_RESOLUTION_16, 320000, 32, 128)) {
+    Serial.println("Failed to start analog acquisition!");
+    while (true);
+  }
 }
 
 void loop() {
   iter++;
+
+  if (adc.available()) {
+    SampleBuffer buf = adc.read();
+    Serial.println(buf[0] * bit_resolution);
+    buf.release();
+  }
 
   start = micros();
 
   fourier_bin_frequencies = generate_bins(&b, 1, num_bins);
   end = micros();
 
-  for (int i = 0; i < int(num_bins); i++) {
-    sprintf(s, "[%6d] %.1f", i+1, fourier_bin_frequencies[i]);
-    Serial.println(s);
-  }
+//  for (int i = 0; i < int(num_bins); i++) {
+//    sprintf(s, "[%6d] %.1f", i+1, fourier_bin_frequencies[i]);
+//    Serial.println(s);
+//  }
 
-  sprintf(s, "[%6lu] It took %lu micros to calculate logarithmic Fourier frequencies for %d bins.", iter, end - start, int(num_bins));
-  Serial.println(s);
+//  sprintf(s, "[%6lu] It took %lu micros to calculate logarithmic Fourier frequencies for %d bins.", iter, end - start, int(num_bins));
+//  Serial.println(s);
 
   free(fourier_bin_frequencies);
 
-  delay(60000); // min
+//  delay(500);
 }
 
 // g accepts the max and min fourier frequencies, and returns the difference between the logarithms of each.
