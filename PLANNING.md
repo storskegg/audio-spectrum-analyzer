@@ -4,6 +4,8 @@
 
 1. [x] Fix the tooling
 2. Get to know the board a bit
+   1. Arduino Platform
+   2. mbed OS (6.17.0)
 3. DDS function
 4. UI Development I - DDS Control
 5. ADC function - Basic
@@ -29,14 +31,26 @@ I'll have to get one of these working tomorrow. In the meantime, documentation d
 
 ## 2. Get to know the board a bit
 
-I've done a tone of Arduino shit over the years, including on some pretty hot mcu's, but none like this. The GIGA 
-sports an STM32H747. STM is known for some pretty wizardly hardware, and there'll be a learning curve associate with 
+I've done a ton of Arduino shit over the years, including on some pretty hot mcu's, but none like this. The GIGA 
+sports an STM32H747. ST is known for some pretty wizardly hardware, and there'll be a learning curve associated with 
 getting to know its features. Luckily, they have killer documentation.
 
 One feature in particular I'm very interested in: DMA access to the ADCs' read registers. It exists, but I'm not 
 sure if it's available outside STM32Cube's proprietary magic. Additionally, I need to know if DMA access is atomic, 
 if there is an associated mutex to ensure I can't read in the middle of an active write, or if it's entirely 
 unprotected.
+
+### 2.1 Arduino Platform
+
+The arduino platform provides basic wrappers around a more advanced API provided by the underlying OS, mbed. While 
+it is still basic accessors, there's more going on on this board than I've used on other boards, so a bit of a 
+learning curve, here, as I learn what's available.
+
+### 2.2 mbed OS (6.17.0)
+
+In the event I want more advanced access to the STM32H747's features, I may need to turn to what's exposed by mbed, 
+an RTOS that is, unfortunately, slated for abandonment. (Zephyr looks to be the future replacement.) Anyways, it's 
+worth better understanding what's available through the mbed API's directly.
 
 ## 3. DDS function
 
