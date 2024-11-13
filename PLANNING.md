@@ -43,14 +43,25 @@ unprotected.
 ### 2.1 Arduino Platform
 
 The arduino platform provides basic wrappers around a more advanced API provided by the underlying OS, mbed. While 
-it is still basic accessors, there's more going on on this board than I've used on other boards, so a bit of a 
+it is still basic accessors, there's more happening on this board than I've used on other boards, so a bit of a 
 learning curve, here, as I learn what's available.
+
+Things worth looking into, here:
+
+- More advanced use of the ADC's
+- Inter-core comms besides msgpack-based RPC, and `rpc.Call(...)`?
 
 ### 2.2 mbed OS (6.17.0)
 
 In the event I want more advanced access to the STM32H747's features, I may need to turn to what's exposed by mbed, 
 an RTOS that is, unfortunately, slated for abandonment. (Zephyr looks to be the future replacement.) Anyways, it's 
 worth better understanding what's available through the mbed API's directly.
+
+Things worth looking into, here:
+
+- threads
+- atomics, mutexes, and other thread-safe types
+- shared memory access between cores
 
 ## 3. DDS function
 
