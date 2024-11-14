@@ -127,10 +127,10 @@ void touch_toggle(uint8_t contacts, GDTpoint_t* points) {
     Serial.println(points[0].y);
 
     if (touch_x < screen_size_x && touch_y < screen_size_y) {
-      switch_1 = !switch_1;
+      touch_switch_dds_toggle = !touch_switch_dds_toggle;
       Serial.println("switched");
 
-      if (switch_1) {
+      if (touch_switch_dds_toggle) {
         set_screen_on();
         dds_on();
       } else {
