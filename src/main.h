@@ -42,9 +42,9 @@ int touch_x;
 int touch_y;
 
 unsigned long touch_last;
-unsigned long touch_threshold = 750; // millis
+unsigned long touch_threshold = 650; // millis
 
-bool switch_1;
+bool touch_switch_dds_toggle;
 
 void touch_toggle(uint8_t contacts, GDTpoint_t* points);
 void set_screen_on();
