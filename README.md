@@ -113,6 +113,7 @@ typically found on MCU's. Using the onboard ADC also simplifies the start of thi
 ### Application Notes
 
 - STM32H747 16-bit ADC: https://www.st.com/resource/en/application_note/dm00628458-getting-started-with-the-stm32h7-series-mcu-16bit-adc-stmicroelectronics.pdf
+- STM32H747 IPC: https://www.st.com/resource/en/application_note/dm00771441-stm32h745755-and-stm32h747757-lines-interprocessor-communications-stmicroelectronics.pdf
 
 ### Academic Papers, Journal Articles, etc
 
