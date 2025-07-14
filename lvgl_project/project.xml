@@ -1,0 +1,7 @@
+<project>
+    <targets>
+        <target name="large">
+            <display width="800" height="480" color_format="RGB565"/>
+        </target>
+    </targets>
+</project>

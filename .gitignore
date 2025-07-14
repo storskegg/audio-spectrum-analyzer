@@ -13,3 +13,5 @@
 
 # PlatformIO project files TODO: determine if these should be committed
 .pio/
+
+.DS_Store
