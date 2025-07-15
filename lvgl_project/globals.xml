@@ -1,14 +1,16 @@
 <globals>
     <images>
-        <!-- <data name="img_wifi" src_path="images/wifi-solid.png"/> -->
+        <!-- <data name="img_wifi" src_path="images/wifi-solid.png" /> -->
     </images>
 
     <fonts>
-        <tiny_ttf name="font_title" size="20" src_path="fonts/Inter-SemiBold.ttf"/>
-        <!-- <tiny_ttf name="font_subtitle" size="14" src_path="fonts/Inter-SemiBold.ttf"/> -->
+        <tiny_ttf name="font_title" size="20" src_path="fonts/Inter-SemiBold.ttf" />
+        <tiny_ttf name="font_subtitle" size="14" src_path="fonts/Inter-SemiBold.ttf" />
     </fonts>
 
     <subjects>
-        <int name="hours" value="17"/>
+        <int name="limit_low" value="20" />
+        <int name="limit_high" value="20000" />
+        <int name="sweep_method" value="0" />
     </subjects>
 </globals>
